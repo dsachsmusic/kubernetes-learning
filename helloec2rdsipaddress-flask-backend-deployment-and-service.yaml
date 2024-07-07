@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: helloec2rdsipaddress-flask-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: helloec2rdsipaddress-flask-backend
+  template:
+    metadata:
+      labels:
+        app: helloec2rdsipaddress-flask-backend
+    spec:
+      containers:
+      - name: helloec2rdsipaddress-flask-backend
+        image: dsachsmusic/helloec2rdsipaddress-flask-backend:latest
+        ports:
+        - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: helloec2rdsipaddress-flask-backend-service
+spec:
+  selector:
+    app: helloec2rdsipaddress-flask-backend
+  ports:
+  - protocol: TCP
+    port: 8080
+    targetPort: 8080
+  type: NodePort
