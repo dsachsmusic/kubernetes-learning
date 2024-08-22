@@ -1,3 +1,4 @@
+# Startup
 Open Docker (Docker Desktop) and start minikube (previoulsy configured...during minkube install?)
 Open CMD and run minikube start 
 
