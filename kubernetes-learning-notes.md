@@ -1,3 +1,6 @@
+Open Docker (Docker Desktop) and start minikube (previoulsy configured...during minkube install?)
+Open CMD and run minikube start 
+
 From within app folder, in repo where app lives (if different) app folder, create a docker file (i.e. a file named "Dockerfile" ...no extension(?)). 
 
 Docker file includes:
@@ -20,18 +23,40 @@ Add an additional tag, and then push to Dockerhub
 
 Create a Kubernetes Deployment and a Kubernetes Service, with YAML
 - YAML: Could have two separate YAML files...one for the Deployment and one for the Service
+  - In a YAML (object(?) resource definition) for Kubernetes, "kind" defines what type of Kubernetes resource (?)
+  - If having multiple (objects(?) resource definitions), separate them with line of  "---"
 - Deployment: A resource object used to manage the lifecycle of pods and applications running on them. 
   - i.e. - getting the pods running and stood up in the desired state/rolling back if needed, scalaing if needed, etc?
-  - Lorem ipsum....need to keep working on understanding the parts of the deployment (
+  - Understanding the parts of the deployment
+    - Spec - defines the desired state (?)...including
+      - Replicas (how many instances of the pod(s?) defined in the spec should be deployed (or whatever is defined in the spec(?)...should be deployed(?))
+
 - Aside about Resources: Kubernetes "resources" are entities managed by (via?) the Kubernetes API...including Pods, Services, Deployments, Configmaps, etc.
 
 
 Running Kubectl
+- kubectl apply -f C:\Users\david\working\kubernetes-learning\helloec2rdsipaddress-flask-backend-deployment-and-service.yaml
 - Sends YAML file to Kubernetes API server (control plane) to "make it so" with regard to desired state in the YAML
 - Scheduler determines which node, within the cluster, to run the Pod(s)(i.e. containers)? on, binds the pod(s) to the node, and updates the Kubernetes API server with the assignment
   - Assingment is based on resources available, some rules that can be customized, etc. (?)
   - Term "scheduler" in distributed computing often refers to resource allocation and management...perhaps an extension of the concept of scheduling "jobs" in the case of older task runners that ran scripts sequentially(?)
-
+- Check the status of the deployment
+  - kubectl get deployments 
+```NAME                                 READY   UP-TO-DATE   AVAILABLE   AGE
+hello-minikube                       1/1     1            1           84d
+helloec2rdsipaddress-flask-backend   1/1     1            1           45d```
+  -kubectl get pods
+```NAME                                                 READY   STATUS    RESTARTS      AGE
+hello-minikube-5c898d8489-fcm4h                      1/1     Running   2 (19m ago)   84d
+helloec2rdsipaddress-flask-backend-5998f6dff-st4vn   1/1     Running   1 (19m ago)   45d```
+   - kubectl get services
+```NAME                                         TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
+hello-minikube                               NodePort    10.108.36.69     <none>        8080:32229/TCP   84d
+helloec2rdsipaddress-flask-backend-service   NodePort    10.106.187.188   <none>        8080:32280/TCP   45d
+kubernetes                                   ClusterIP   10.96.0.1        <none>        443/TCP          84d```
+- Get the URL to the service (Minikube’s IP address and the assigned NodePort)
+  - minikube service helloec2rdsipaddress-flask-backend-service --url
+```http://127.0.0.1:64108```
 Kubernetes cluster basics/context
 - Nodes are physical or virtual machines where containers are deployed to.
 - Pods are smallest kubernetes "object" and they represent a single instance of an application
