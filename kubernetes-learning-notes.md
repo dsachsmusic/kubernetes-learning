@@ -1,7 +1,7 @@
 Open Docker (Docker Desktop) and start minikube (previoulsy configured...during minkube install?)
 Open CMD and run minikube start 
 
-h1. Setting up the container
+# Setting up the container
 From within app folder, in repo where app lives (if different) app folder, create a docker file (i.e. a file named "Dockerfile" ...no extension(?)). 
 
 Docker file includes:
@@ -14,15 +14,15 @@ Docker file includes:
 
 
 Run the following command to build the image:
-- docker build -t helloec2rdsipaddress-flask-backend .
+- `docker build -t helloec2rdsipaddress-flask-backend .`
 - Notes: In this command, the -t is a flag specifying a tag should be added to the image.  The parameter following it is the name of the image.  Regarding the -t flag,t he name can include a colon, and then some string, to specify a specific tag that should be added to the image...if no colon/string is added, then a default tag of "latest is added".  The "." specifies to build the image from the current directory (using the dockerfile there, and, using it as a point of reference for relative paths). 
 
 Add an additional tag, and then push to Dockerhub
-- docker tag helloec2rdsipaddress-flask-backend dsachsmusic/helloec2rdsipaddress-flask-backend
-- docker push dsachsmusic/my-flask-backend:latest
+- `docker tag helloec2rdsipaddress-flask-backend dsachsmusic/helloec2rdsipaddress-flask-backend`
+- `docker push dsachsmusic/my-flask-backend:latest`
 - Notes: With, the docker build command, earlier, we chose to specify a name. We did not need to.  A docker image is given an image ID when created, and we can name it (and (?) tag it) later, with the "docker tag" command. In order to prepare the image to be pushed to a container registry, we should add a repository name (username), for which, the syntax required is, pre-pending the name with the repository name (username) and a forward slash. Side note: There is additional syntax...prepending the repository name (username) with a registry name, and a forward slash...this can be used if we wish for Docker to push the image to a repository other than the default, of DockerHub. We can add many names/tags, if we wish.  We can also, actually push the image to another respository as well, by adding a name with that respository named in the syntax (though, we need to be able to authenticate to that repository). And, by the way, a registry manages docker images in layers, meaning, that if the image already exists, with the same layers (docker image, working dir, files, run, expose, and cmd parameter values, then, it won't recreate it: the image will be referenced by image ID, and available/tagged to show in, each location.
 
-h1. Deploying with Kubernetes
+# Deploying with Kubernetes
 Create a Kubernetes Deployment and a Kubernetes Service, with YAML
 - YAML: Could have two separate YAML files...one for the Deployment and one for the Service
   - In a YAML (object(?) resource definition) for Kubernetes, "kind" defines what type of Kubernetes resource (?)
@@ -76,7 +76,7 @@ Kubernetes cluster basics/context
   - Container runtime - runs the containers...provides interface between OS (kernel) and containerized applications (like a hypervisor(?)). Examples include Docker and containerd.
 
 
-h1. Doing it with Helm
+# Doing it with Helm
 Download Helm via `winget install Helm.Helm`
 Run `helm version` to confirm install worked
 Create a new folder: `helm create helloec2rdsipaddress-flask-backend`
@@ -93,7 +93,8 @@ and
 tag: latest
 ```
 as well as:
-```service:
+```
+  service:
   ...
   port: 8080
 ```
@@ -147,9 +148,9 @@ Install via Helm: `helm install helloec2rdsipaddress-flask-backend ./helloec2rds
 
 Set up port forwarding so can access pod via www
 - Get the pod name
-  - Run kubectl get pod --namespace default ...
+  - Run `kubectl get pod --namespace default` ...
   - ...copy the name of the pod that was created
 - Get the container port
-  - Run kubectl get deployment <name of the pod> -o jsonpath='{.spec.template.spec.containers[0].ports[0].containerPort}'
+  - Run `kubectl get deployment <name of the pod> -o jsonpath='{.spec.template.spec.containers[0].ports[0].containerPort}'`
 - Port forward
-  - Run kubectl --namespace default port-forward <name of the pod> 8080:<the container port>
+  - Run `kubectl --namespace default port-forward <name of the pod> 8080:<the container port>`
