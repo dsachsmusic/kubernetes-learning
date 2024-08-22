@@ -35,13 +35,14 @@ Create a Kubernetes Deployment and a Kubernetes Service, with YAML
 
 
 Running Kubectl
-- kubectl apply -f C:\Users\david\working\kubernetes-learning\helloec2rdsipaddress-flask-backend-deployment-and-service.yaml
+- `kubectl apply -f C:\Users\david\working\kubernetes-learning\helloec2rdsipaddress-flask-backend-deployment-and-service.yaml`
 - Sends YAML file to Kubernetes API server (control plane) to "make it so" with regard to desired state in the YAML
 - Scheduler determines which node, within the cluster, to run the Pod(s)(i.e. containers)? on, binds the pod(s) to the node, and updates the Kubernetes API server with the assignment
   - Assingment is based on resources available, some rules that can be customized, etc. (?)
   - Term "scheduler" in distributed computing often refers to resource allocation and management...perhaps an extension of the concept of scheduling "jobs" in the case of older task runners that ran scripts sequentially(?)
-- Check the status of the deployment
-  - `kubectl get deployments`
+
+Check the status of the deployment, list pods, services, etc.
+- `kubectl get deployments`
 ```NAME                                 READY   UP-TO-DATE   AVAILABLE   AGE
 hello-minikube                       1/1     1            1           84d
 helloec2rdsipaddress-flask-backend   1/1     1            1           45d
