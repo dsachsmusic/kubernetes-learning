@@ -41,12 +41,10 @@ Running Kubectl
   - Assingment is based on resources available, some rules that can be customized, etc. (?)
   - Term "scheduler" in distributed computing often refers to resource allocation and management...perhaps an extension of the concept of scheduling "jobs" in the case of older task runners that ran scripts sequentially(?)
 - Check the status of the deployment
-  - kubectl get deployments 
-```NAME                                 READY   UP-TO-DATE   AVAILABLE   AGE
+  - kubectl get deployments ```NAME                                 READY   UP-TO-DATE   AVAILABLE   AGE
 hello-minikube                       1/1     1            1           84d
 helloec2rdsipaddress-flask-backend   1/1     1            1           45d
 ```
-
   -kubectl get pods
 ```NAME                                                 READY   STATUS    RESTARTS      AGE
 hello-minikube-5c898d8489-fcm4h                      1/1     Running   2 (19m ago)   84d
