@@ -44,12 +44,14 @@ Running Kubectl
   - kubectl get deployments 
 ```NAME                                 READY   UP-TO-DATE   AVAILABLE   AGE
 hello-minikube                       1/1     1            1           84d
-helloec2rdsipaddress-flask-backend   1/1     1            1           45d```
+helloec2rdsipaddress-flask-backend   1/1     1            1           45d
+```
 
   -kubectl get pods
 ```NAME                                                 READY   STATUS    RESTARTS      AGE
 hello-minikube-5c898d8489-fcm4h                      1/1     Running   2 (19m ago)   84d
-helloec2rdsipaddress-flask-backend-5998f6dff-st4vn   1/1     Running   1 (19m ago)   45d```
+helloec2rdsipaddress-flask-backend-5998f6dff-st4vn   1/1     Running   1 (19m ago)   45d
+```
 
    - kubectl get services
 ```NAME                                         TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
