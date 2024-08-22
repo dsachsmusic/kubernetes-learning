@@ -1,6 +1,7 @@
 Open Docker (Docker Desktop) and start minikube (previoulsy configured...during minkube install?)
 Open CMD and run minikube start 
 
+h1. Setting up the container
 From within app folder, in repo where app lives (if different) app folder, create a docker file (i.e. a file named "Dockerfile" ...no extension(?)). 
 
 Docker file includes:
@@ -21,6 +22,7 @@ Add an additional tag, and then push to Dockerhub
 - docker push dsachsmusic/my-flask-backend:latest
 - Notes: With, the docker build command, earlier, we chose to specify a name. We did not need to.  A docker image is given an image ID when created, and we can name it (and (?) tag it) later, with the "docker tag" command. In order to prepare the image to be pushed to a container registry, we should add a repository name (username), for which, the syntax required is, pre-pending the name with the repository name (username) and a forward slash. Side note: There is additional syntax...prepending the repository name (username) with a registry name, and a forward slash...this can be used if we wish for Docker to push the image to a repository other than the default, of DockerHub. We can add many names/tags, if we wish.  We can also, actually push the image to another respository as well, by adding a name with that respository named in the syntax (though, we need to be able to authenticate to that repository). And, by the way, a registry manages docker images in layers, meaning, that if the image already exists, with the same layers (docker image, working dir, files, run, expose, and cmd parameter values, then, it won't recreate it: the image will be referenced by image ID, and available/tagged to show in, each location.
 
+h1. Deploying with Kubernetes
 Create a Kubernetes Deployment and a Kubernetes Service, with YAML
 - YAML: Could have two separate YAML files...one for the Deployment and one for the Service
   - In a YAML (object(?) resource definition) for Kubernetes, "kind" defines what type of Kubernetes resource (?)
@@ -72,3 +74,82 @@ Kubernetes cluster basics/context
 - Cluster is a (set of) node(s) and a control plane (its possible to have a single node cluster, as in the case of minikube, or other simple cases.
 - Control plane, container runtime, and other parts of a kubernetes cluster
   - Container runtime - runs the containers...provides interface between OS (kernel) and containerized applications (like a hypervisor(?)). Examples include Docker and containerd.
+
+
+h1. Doing it with Helm
+Download Helm via `winget install Helm.Helm`
+Run `helm version` to confirm install worked
+Create a new folder: `helm create helloec2rdsipaddress-flask-backend`
+
+Take existing manifest(s) for deployment and service, and, set them up in the helm folder...can utilize variables within values.yaml and Chart.yaml for template completion...
+
+In values.yaml...set the following 
+```image:
+  repository: dsachsmusic/helloec2rdsipaddress-flask-backend
+```
+
+and
+```
+tag: latest
+```
+as well as:
+```service:
+  ...
+  port: 8080
+```
+
+Set deployment.yaml to the following
+```
+# templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Chart.Name }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Chart.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Chart.Name }}
+    spec:
+      containers:
+      - name: {{ .Chart.Name }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        ports:
+        - containerPort: {{ .Values.service.port }}
+```
+
+Set service.yaml to the following 
+```
+# templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Chart.Name }}-service
+spec:
+  selector:
+    app: {{ .Chart.Name }}
+  ports:
+  - protocol: TCP
+    port: {{ .Values.service.port }}
+    targetPort: {{ .Values.service.port }}
+  type: NodePort
+```
+
+Assuming the deployment and service were previously deployed via Kubernetes (kubectl), delete them, so they can be deployed using Helm (there are other options as well, like to annotate and label them to be managed by help, etc., but we'll just delete in this case)
+- `kubectl delete service helloec2rdsipaddress-flask-backend-service`
+- `kubectl delete deployment helloec2rdsipaddress-flask-backend `
+Install via Helm: `helm install helloec2rdsipaddress-flask-backend ./helloec2rdsipaddress-flask-backend`
+- Run from within the folder the Helm chart(?) lives in
+
+Set up port forwarding so can access pod via www
+- Get the pod name
+  - Run kubectl get pod --namespace default ...
+  - ...copy the name of the pod that was created
+- Get the container port
+  - Run kubectl get deployment <name of the pod> -o jsonpath='{.spec.template.spec.containers[0].ports[0].containerPort}'
+- Port forward
+  - Run kubectl --namespace default port-forward <name of the pod> 8080:<the container port>
